@@ -1,0 +1,7 @@
+{
+  "name": "TIA Scanner",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
