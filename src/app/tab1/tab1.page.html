@@ -6,12 +6,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" [ngClass]="{'camera-on': cameraOn}">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div id="cameraPreview" class="cameraPreview"></div>
+  <div [ngStyle]="{'margin-top': '320px'}">
+    <ion-button (click)="start()">Start</ion-button>
+    <ion-button (click)="stop()">Stop</ion-button>
+    <ion-button (click)="reset()">Reset</ion-button>
+
+    <div>
+      Result: {{ scanResult | json }}
+    </div>
+  </div>
 </ion-content>
