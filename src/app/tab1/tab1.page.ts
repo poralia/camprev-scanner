@@ -93,7 +93,7 @@ export class Tab1Page {
 
   async start() {
     const width: number = this.platform.width();
-    const height: number = 300;
+    const height: number = 600;
 
     const options: CameraPreviewOptions = {
       parent: 'cameraPreview',
@@ -101,7 +101,7 @@ export class Tab1Page {
       width: width,
       height: height,
       enableZoom: true,
-      enableHighResolution: true,
+      enableHighResolution: false,
     }
 
     CameraPreview.start(options).then(async () => {
@@ -109,7 +109,7 @@ export class Tab1Page {
     
       while (!this.hasResult) {
         const captureOptions: CameraPreviewPictureOptions = {
-          quality: 90,
+          quality: 50,
         }
 
         const result = await CameraPreview.captureSample(captureOptions);
@@ -122,15 +122,14 @@ export class Tab1Page {
 
   async stop() {
     await CameraPreview.stop();
+
     this.hasResult = false;
+    this.scanResult = '';
   }
 
   async reset() {
     await this.stop();
     await this.start();
-  
-    this.hasResult = false;
-    this.scanResult = null;
   }
 
 }

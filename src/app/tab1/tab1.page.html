@@ -7,13 +7,16 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" [ngClass]="{'camera-on': cameraOn}">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <div id="cameraPreview" class="cameraPreview"></div>
+
+  <div class="scan-box" [hidden]="!cameraOn">
+    <div class="scan-box-inner">
+      <div class="scan-box-inset"></div>
+    </div>
+
+    <p class="text-white text-sm text-center pt-2">Arahkan kotak ke Barcode / QRCode</p>
+  </div>
+
   <div [ngStyle]="{'margin-top': '320px'}">
     <ion-button (click)="start()">Start</ion-button>
     <ion-button (click)="stop()">Stop</ion-button>

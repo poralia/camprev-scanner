@@ -6,3 +6,28 @@
 .camera-on {
     --background: transparent !important;
 }
+
+.scan-box {
+	content: "";
+	display: block;
+	width: 80%;
+	top: 8%;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+
+.scan-box-inner {
+    width: 200px;
+    height: 200px;
+}
+
+.scan-box-inset {
+	position:  absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	border: 2px solid #fff;
+	box-shadow: 0 0 0 100vmax rgb(0, 0, 0, 0.5);
+ }
