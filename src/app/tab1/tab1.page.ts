@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@capacitor-community/camera-preview';
 import { IonContent, Platform } from '@ionic/angular';
-import { Filesystem, Directory, WriteFileOptions, MkdirOptions } from '@capacitor/filesystem';
+import { Filesystem, Directory, WriteFileOptions, MkdirOptions, DeleteFileOptions } from '@capacitor/filesystem';
 import { BarcodeScanner, ReadBarcodesFromImageOptions } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
@@ -16,30 +16,32 @@ export class Tab1Page {
   public cameraOn: boolean = false;
   public scanResult: any;
   public hasResult: boolean = false;
+  public marginTop: number = 0;
 
   constructor(
     private platform: Platform
   ) {}
 
   ionViewDidEnter() {
-    
+    this.marginTop = this.platform.height() / 2;
   }
 
   async saveAsFile(base64: any) {
     const blob = this.b64toBlob(base64, 'image/jpeg');
     const fileName = 'tia-scaner-' + (new Date().getTime()).toString(16);
+    const filePath = `barcode/${fileName}.jpg`;
 
     const options: WriteFileOptions = {
-      path: `barcode/${fileName}.jpg`,
+      path: filePath,
       data: base64,
       recursive: true,
-      directory: Directory.Documents,
+      directory: Directory.Cache,
     }
 
     try {
       const mkdirOptins: MkdirOptions = {
         path: 'barcode',
-        directory: Directory.Documents,
+        directory: Directory.Cache,
         recursive: true,
       }
       const dir = await Filesystem.mkdir(mkdirOptins);
@@ -52,7 +54,7 @@ export class Tab1Page {
 
     const { uri } = await Filesystem.writeFile(options);
     console.log(uri);
-    this.scanBarcode(uri);
+    this.scanBarcode(uri, filePath);
   }
 
   b64toBlob(b64Data: any, contentType: any) {
@@ -78,9 +80,9 @@ export class Tab1Page {
     return blob;
   }
 
-  async scanBarcode(filePath: any) {
+  async scanBarcode(fileUri: any, filePath: string) {
     const options: ReadBarcodesFromImageOptions = {
-      path: filePath,
+      path: fileUri,
     }
     const { barcodes } = await BarcodeScanner.readBarcodesFromImage(options);
     console.log(barcodes);
@@ -89,11 +91,19 @@ export class Tab1Page {
       this.hasResult = true;
       this.scanResult = barcodes;
     }
+
+    // delete file
+    const deleteOptions: DeleteFileOptions = {
+      path: filePath,
+      directory: Directory.Cache,
+    }
+
+    await Filesystem.deleteFile(deleteOptions);
   }
 
   async start() {
     const width: number = this.platform.width();
-    const height: number = 600;
+    const height: number = this.platform.height() / 2;
 
     const options: CameraPreviewOptions = {
       parent: 'cameraPreview',
