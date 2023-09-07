@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@capacitor-community/camera-preview';
+import { CameraPreview, CameraPreviewFlashMode, CameraPreviewOptions, CameraPreviewPictureOptions } from '@capacitor-community/camera-preview';
 import { IonContent, Platform } from '@ionic/angular';
 import { Filesystem, Directory, WriteFileOptions, MkdirOptions, DeleteFileOptions } from '@capacitor/filesystem';
 import { BarcodeScanner, ReadBarcodesFromImageOptions } from '@capacitor-mlkit/barcode-scanning';
+import { Flashlight } from '@awesome-cordova-plugins/flashlight';
 
 @Component({
   selector: 'app-tab1',
@@ -146,6 +147,19 @@ export class Tab1Page {
   async reset() {
     await this.stop();
     await this.start();
+  }
+
+  async turnOnFlashlight() {
+    const flashModes = await CameraPreview.getSupportedFlashModes();
+    const supportedFlashModes: CameraPreviewFlashMode[] = flashModes.result;
+    
+    const cameraPreviewFlashMode: CameraPreviewFlashMode = 'torch';
+    await CameraPreview.setFlashMode({ flashMode: cameraPreviewFlashMode });
+  }
+
+  async turnOffFlashlight() {
+    const cameraPreviewFlashMode: CameraPreviewFlashMode = 'off';
+    await CameraPreview.setFlashMode({ flashMode: cameraPreviewFlashMode });
   }
 
 }
