@@ -35,21 +35,21 @@ export class Tab1Page {
       path: filePath,
       data: base64,
       recursive: true,
-      directory: Directory.Cache,
+      directory: Directory.Data,
     }
 
     try {
       const mkdirOptins: MkdirOptions = {
         path: 'barcode',
-        directory: Directory.Cache,
+        directory: Directory.Data,
         recursive: true,
       }
       const dir = await Filesystem.mkdir(mkdirOptins);
 
       console.log(dir, 'DIR');
     }
-    catch {
-      console.log('dir exist');
+    catch (e) {
+      console.log(e);
     }
 
     const { uri } = await Filesystem.writeFile(options);
@@ -95,10 +95,16 @@ export class Tab1Page {
     // delete file
     const deleteOptions: DeleteFileOptions = {
       path: filePath,
-      directory: Directory.Cache,
+      directory: Directory.Data,
     }
 
-    await Filesystem.deleteFile(deleteOptions);
+    try {
+      const deleted = await Filesystem.deleteFile(deleteOptions);
+      console.log('deleted', deleted);
+    }
+    catch (e) {
+      console.log(e);
+    }
   }
 
   async start() {
