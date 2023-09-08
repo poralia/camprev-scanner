@@ -1,0 +1,37 @@
+<ion-header [translucent]="true" class="ion-no-border header-over-content">
+  <ion-toolbar class="bg-transparent absolute top-0 left-0 right-0" color="translucent">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissScanner()" class="ion-no-padding !mr-2">
+        <ion-icon src="assets/icon/arrow-back-white.svg" slot="icon-only" class="w-8 h-8"></ion-icon>
+      </ion-button>
+
+      <ion-button class="toggleFlashLight">
+        <ion-icon [name]="isFlashLightOn ? 'flash-off-outline' : 'flash-outline'" slot="icon-only" class="text-neutral-100"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="false" [scrollY]="false">
+  <div class="relative h-full w-full flex flex-col">
+    <div class="h-full relative overflow-hidden">
+      <video 
+        #scannerEl 
+        autoplay 
+        [ngStyle]="{
+          'min-height': '100%', 
+          'min-width': '100%', 
+          'width': 'auto', 
+          'height': 'auto'
+        }">
+      </video>
+
+      <div class="absolute top-0 right-0 bottom-0 left-0 flex flex-col items-center justify-center">
+        <div class="scanner-overlay absolute w-5/6 h-32 border border-solid border-blue-100 rounded-xl"></div>
+        <div class="relative z-10 mt-36 pt-12 w-5/6 text-center px-5">
+          <ion-text class="text-neutral-200 leading-4">Place lower area on barcode or QR to find product</ion-text>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

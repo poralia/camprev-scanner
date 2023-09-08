@@ -25,6 +25,7 @@
     <ion-button (click)="turnOffFlashlight()">Flash Off</ion-button>
 
     <div>
+      <ion-img *ngIf="fileUri != ''" [src]="sanitizedFileUri(fileUri)"></ion-img>
       Result: {{ scanResult | json }}
     </div>
   </div>

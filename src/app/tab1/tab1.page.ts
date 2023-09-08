@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Sanitizer, ViewChild } from '@angular/core';
 import { CameraPreview, CameraPreviewFlashMode, CameraPreviewOptions, CameraPreviewPictureOptions } from '@capacitor-community/camera-preview';
 import { IonContent, Platform } from '@ionic/angular';
 import { Filesystem, Directory, WriteFileOptions, MkdirOptions, DeleteFileOptions } from '@capacitor/filesystem';
 import { BarcodeScanner, ReadBarcodesFromImageOptions } from '@capacitor-mlkit/barcode-scanning';
-import { Flashlight } from '@awesome-cordova-plugins/flashlight';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tab1',
@@ -14,17 +14,25 @@ export class Tab1Page {
 
   @ViewChild(IonContent) ionContent: IonContent | any;
 
+  private win: any = window;
+
   public cameraOn: boolean = false;
   public scanResult: any;
   public hasResult: boolean = false;
   public marginTop: number = 0;
+  public fileUri: string = '';
 
   constructor(
-    private platform: Platform
+    private platform: Platform,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ionViewDidEnter() {
     this.marginTop = this.platform.height() / 2;
+  }
+
+  sanitizedFileUri(fileUri: string) {
+    return this.win.Ionic.WebView.convertFileSrc(this.fileUri);
   }
 
   async saveAsFile(base64: any) {
@@ -36,13 +44,13 @@ export class Tab1Page {
       path: filePath,
       data: base64,
       recursive: true,
-      directory: Directory.Data,
+      directory: Directory.Cache,
     }
 
     try {
       const mkdirOptins: MkdirOptions = {
         path: 'barcode',
-        directory: Directory.Data,
+        directory: Directory.Cache,
         recursive: true,
       }
       const dir = await Filesystem.mkdir(mkdirOptins);
@@ -55,6 +63,7 @@ export class Tab1Page {
 
     const { uri } = await Filesystem.writeFile(options);
     console.log(uri);
+    this.fileUri = uri;
     this.scanBarcode(uri, filePath);
   }
 
@@ -96,7 +105,7 @@ export class Tab1Page {
     // delete file
     const deleteOptions: DeleteFileOptions = {
       path: filePath,
-      directory: Directory.Data,
+      directory: Directory.Cache,
     }
 
     try {
